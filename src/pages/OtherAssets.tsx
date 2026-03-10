@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAssetData } from '../hooks/useAssetData';
-import { supabase } from '../lib/supabase';
 import { useAuthStore } from '../store/useAuthStore';
+import { supabase } from '../lib/supabase';
 import { OtherAsset, OtherAssetType } from '../types';
 import { Plus, Pencil, Trash2, X, Package } from 'lucide-react';
 
@@ -52,16 +52,6 @@ const OtherAssets = () => {
     // User inputs: Unit Price & Quantity
     // We display: Total = Unit Price * Quantity
     // We save: Total Value (as 'value' column)
-
-    // Actually, looking at the previous code, 'value' was just total value.
-    // If we want to support quantity, we should probably change the input to "Unit Price"
-    // and let the user see the calculated total.
-    
-    // However, the database only has a 'value' column (total value). 
-    // If we want to persist quantity, we might need to store it in description or just use it for calculation once.
-    // Let's assume for now we just use it for calculation helper in the UI, unless we migrate the DB.
-    // Given I can't easily migrate DB schema right now without SQL file, 
-    // I will implement it as a UI helper: "Unit Price" * "Quantity" = "Total Value" (saved to DB)
 
     const totalValue = formData.value * formData.quantity;
 
@@ -133,14 +123,16 @@ const OtherAssets = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">其他资产管理</h1>
-          <p className="text-sm text-gray-500 mt-1">总价值：<span className="text-blue-600 font-bold text-lg">{formatCurrency(totalOtherAssets)}</span></p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">其他资产管理</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            总价值：<span className="text-blue-600 dark:text-blue-400 font-bold text-lg">{formatCurrency(totalOtherAssets)}</span>
+          </p>
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
         >
           <Plus className="w-4 h-4" />
           新增资产
@@ -149,35 +141,35 @@ const OtherAssets = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {otherAssets.length === 0 ? (
-          <div className="col-span-full bg-white p-12 rounded-xl border border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-500">
+          <div className="col-span-full bg-white/50 dark:bg-gray-800/50 p-12 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 backdrop-blur-sm">
             <Package className="w-12 h-12 mb-4 opacity-20" />
             <p>暂无其他资产数据，点击上方按钮新增</p>
           </div>
         ) : (
           otherAssets.map((asset) => (
-            <div key={asset.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative group">
-              <div className="flex items-start justify-between mb-4">
-                <span className={`text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider ${
-                  asset.type === 'daily_earnings' ? 'bg-amber-100 text-amber-700' : 
-                  asset.type === 'physical_assets' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+            <div key={asset.id} className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl p-5 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-[1.02] transition-all relative group duration-300">
+              <div className="flex items-start justify-between mb-3">
+                <span className={`text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider ${
+                  asset.type === 'daily_earnings' ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 
+                  asset.type === 'physical_assets' ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' : 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400'
                 }`}>
                   {getTypeName(asset.type)}
                 </span>
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => handleOpenModal(asset)} className="p-1 text-gray-400 hover:text-blue-600">
+                <div className="flex gap-2 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button onClick={() => handleOpenModal(asset)} className="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(asset.id)} className="p-1 text-gray-400 hover:text-red-600">
+                  <button onClick={() => handleDelete(asset.id)} className="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{asset.name}</h3>
-              <p className="text-2xl font-bold text-blue-600 mb-3">{formatCurrency(Number(asset.value))}</p>
+              <h3 className="text-base font-bold text-gray-800 dark:text-white mb-1">{asset.name}</h3>
+              <p className="text-2xl font-black text-blue-600 dark:text-blue-400 mb-3">{formatCurrency(Number(asset.value))}</p>
               {asset.description && (
-                <p className="text-sm text-gray-500 line-clamp-2 border-t border-gray-50 pt-3">
+                <div className="text-xs text-gray-400 dark:text-gray-500 border-t border-gray-100 dark:border-gray-700 pt-3 leading-relaxed">
                   {asset.description}
-                </p>
+                </div>
               )}
             </div>
           ))
@@ -186,9 +178,9 @@ const OtherAssets = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200">
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-blue-600 text-white">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200 shadow-2xl border border-gray-100 dark:border-gray-700">
+            <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-blue-600 text-white">
               <h3 className="text-lg font-bold">{editingAsset ? '编辑资产' : '新增其他资产'}</h3>
               <button onClick={() => setIsModalOpen(false)} className="hover:rotate-90 transition-transform">
                 <X className="w-6 h-6" />
@@ -196,9 +188,9 @@ const OtherAssets = () => {
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">资产类型</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">资产类型</label>
                 <select
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as OtherAssetType })}
                 >
@@ -208,11 +200,11 @@ const OtherAssets = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">名称</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">名称</label>
                 <input
                   type="text"
                   required
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   placeholder="如：今日外卖红包、iPhone 15 Pro、Steam账号"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -220,39 +212,39 @@ const OtherAssets = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">单价/估值 (¥)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">单价/估值 (¥)</label>
                   <input
                     type="number"
                     step="0.01"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     value={formData.value}
                     onChange={(e) => setFormData({ ...formData, value: parseFloat(e.target.value) })}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">数量</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">数量</label>
                   <input
                     type="number"
                     step="1"
                     min="1"
                     required
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                     value={formData.quantity}
                     onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
                   />
                 </div>
               </div>
-              <div className="bg-blue-50 p-3 rounded-lg flex justify-between items-center text-blue-800 font-medium">
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg flex justify-between items-center text-blue-800 dark:text-blue-300 font-medium">
                 <span>总价值：</span>
                 <span className="text-lg">
                   {new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(formData.value * formData.quantity)}
                 </span>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">备注说明</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">备注说明</label>
                 <textarea
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   rows={3}
                   placeholder="添加更多细节描述..."
                   value={formData.description}
@@ -263,7 +255,7 @@ const OtherAssets = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   取消
                 </button>

@@ -215,29 +215,29 @@ const Reports = () => {
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">报表中心</h1>
-        <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">报表中心</h1>
+        <div className="flex flex-wrap gap-3 w-full sm:w-auto">
           <button
             onClick={handleArchiveSnapshot}
             disabled={archiving}
-            className="flex items-center gap-2 bg-white text-emerald-600 border border-emerald-600 px-4 py-2 rounded-lg hover:bg-emerald-50 transition-all shadow-sm active:scale-95 disabled:opacity-50"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md text-emerald-600 dark:text-emerald-400 border border-emerald-600/30 px-4 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-all shadow-sm active:scale-95 disabled:opacity-50"
           >
             <History className="w-4 h-4" />
             {archiving ? '归档中...' : '归档今日快照'}
           </button>
           <button
             onClick={handleExportExcel}
-            className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-all shadow-sm active:scale-95"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-all shadow-sm active:scale-95"
           >
             <Download className="w-4 h-4" />
-            导出 Excel 报告
+            导出 Excel
           </button>
         </div>
       </div>
 
       {/* Daily Summary Card */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/30 overflow-hidden">
         <div className="bg-emerald-600 p-8 text-white">
           <div className="flex items-center gap-2 text-emerald-100 mb-4">
             <Calendar className="w-4 h-4" />
@@ -256,16 +256,16 @@ const Reports = () => {
 
         <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-1">
-            <p className="text-gray-500 text-sm font-medium">总资产价值</p>
-            <p className="text-xl font-bold text-gray-900">{formatCurrency(totalAssets)}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">总资产价值</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-white">{formatCurrency(totalAssets)}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-gray-500 text-sm font-medium">总负债额度</p>
-            <p className="text-xl font-bold text-red-600">{formatCurrency(totals.liabilities)}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">总负债额度</p>
+            <p className="text-xl font-bold text-red-600 dark:text-red-400">{formatCurrency(totals.liabilities)}</p>
           </div>
           <div className="space-y-1">
-            <p className="text-gray-500 text-sm font-medium">当前负债率</p>
-            <p className={`text-xl font-bold ${debtRatio > 50 ? 'text-red-600' : 'text-emerald-600'}`}>
+            <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">当前负债率</p>
+            <p className={`text-xl font-bold ${debtRatio > 50 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
               {debtRatio.toFixed(2)}%
             </p>
           </div>
@@ -274,9 +274,9 @@ const Reports = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Asset Breakdown */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <PieChartIcon className="w-5 h-5 text-emerald-600" />
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-gray-700/30">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <PieChartIcon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             资产分布占比
           </h3>
           <div className="h-64 flex items-center justify-center">
@@ -285,32 +285,32 @@ const Reports = () => {
         </div>
 
         {/* Breakdown List */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-emerald-600" />
+        <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl p-6 rounded-xl shadow-xl border border-white/20 dark:border-gray-700/30">
+          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             各模块资产明细
           </h3>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-default">
+            <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors cursor-default">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                <span className="text-sm font-medium text-gray-700">金融资产</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">金融资产</span>
               </div>
-              <span className="text-sm font-bold text-gray-900">{formatCurrency(totals.financial)}</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(totals.financial)}</span>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-default">
+            <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors cursor-default">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-blue-500" />
-                <span className="text-sm font-medium text-gray-700">其他资产</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">其他资产</span>
               </div>
-              <span className="text-sm font-bold text-gray-900">{formatCurrency(totals.other)}</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(totals.other)}</span>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-default">
+            <div className="flex items-center justify-between p-3 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors cursor-default">
               <div className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-red-500" />
-                <span className="text-sm font-medium text-gray-700">总负债</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">总负债</span>
               </div>
-              <span className="text-sm font-bold text-gray-900">{formatCurrency(totals.liabilities)}</span>
+              <span className="text-sm font-bold text-gray-900 dark:text-white">{formatCurrency(totals.liabilities)}</span>
             </div>
           </div>
         </div>
